@@ -1,0 +1,1 @@
+echo "it's rag, not ai slop"
