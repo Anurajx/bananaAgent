@@ -22,14 +22,16 @@ def main():
     parser.add_argument("user_prompt",type=str,help="User Prompt")
     args = parser.parse_args()
     
+    messageList = [
+        {
+            "role": "user",
+            "content": args.user_prompt
+        }
+    ]
+    
     response = client.chat.completions.create(
         model="openrouter/free",
-        messages=[
-            {
-                "role": "user",
-                "content": args.user_prompt,
-            }
-        ],
+        messages= messageList
     )
     
     
