@@ -1,7 +1,8 @@
 import os
+import argparse
 from dotenv import load_dotenv
 from openai import OpenAI
-import argparse
+
 
 load_dotenv()
 
@@ -17,27 +18,27 @@ def main():
     if not api_key:
         raise RuntimeError("env variable not set")
     print(r"""
- __                                
-|__) _  _  _  _  _   /\  _  _ _ |_ 
-|__)(_|| )(_|| )(_| /--\(_)(-| )|_ 
+ __
+|__) _  _  _  _  _   /\  _  _ _ |_
+|__)(_|| )(_|| )(_| /--\(_)(-| )|_
                         _/         """)
-    
+
     parser = argparse.ArgumentParser(description="chatbot")
     parser.add_argument("user_prompt",type=str,help="User Prompt")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
-    
+
     messageList = [
         {
             "role": "user",
             "content": args.user_prompt
         }
     ]
-    
+
     response = generate_content(client, messageList)
-    
-    
-    
+
+
+
     if response.usage and args.verbose:
         print(response.choices[0].message.content)
         print(f"Prompt Token: {response.usage.prompt_tokens}")
