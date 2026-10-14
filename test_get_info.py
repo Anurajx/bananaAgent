@@ -9,6 +9,19 @@ class system_function_test(unittest.TestCase):
         print(accessible)
         self.assertEqual(accessible,"directory . is whitin working directory")
 
+    def test_bin_files(self):
+        with self.assertRaises(ValueError):
+            _ = get_files_info.get_files_info("calculator", "/bin")
+
+    def test_stopstop_files(self):
+        with self.assertRaises(ValueError):
+            _ = get_files_info.get_files_info("calculator", "../")
+
+    def test_main_files(self):
+        with self.assertRaises(ValueError):
+            _ = get_files_info.get_files_info("calculator", "main.py")
+
+
 
 if __name__ == "__main__":
     unittest.main()
