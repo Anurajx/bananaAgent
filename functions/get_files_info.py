@@ -21,7 +21,11 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
      # return f"directory {directory} is within working directory"
      #
      # result = f"result for {directory} is -"
-     content = os.listdir(target_dir)
+     try:
+         content = os.listdir(target_dir)
+     except OSError as error:
+         raise ValueError(f"Error: could not list content of {target_dir}") from error
+
      # print(f"CONTENT IS {content}")
 
      final_array= [f"\nresult for {directory}:"]
@@ -33,9 +37,14 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
          try:
              size = os.path.getsize(full_path)
          except OSError as error:
-             raise ValueError(f"Could not deduce size of file or dir {i}") from error
+             raise ValueError(f"Error: Could not deduce size of file or dir {i}") from error
          # print(f"SIZE IS: {size}")
-         is_dir = os.path.isdir(i)
+         try:
+             is_dir = os.path.isdir(full_path)
+         except OSError as error:
+             raise ValueError(f"Error: could not find size of {i}") from error
+
+         # print(f"file {i} is {is_dir}")
          result = f" - {i}: File Size={size}bytes, is_dir={is_dir}"
          final_array.append(result)
 
