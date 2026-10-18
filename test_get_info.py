@@ -4,7 +4,7 @@ import unittest
 from functions.get_files_info import get_files_info
 
 
-class system_function_test(unittest.TestCase):
+class system_get_function_test(unittest.TestCase):
     def test_get_files(self):
         accessible = get_files_info("calculator", ".")
         # print(f"DIAGNOSIS {accessible}")

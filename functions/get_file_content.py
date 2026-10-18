@@ -1,6 +1,9 @@
 import os
 
-def get_file_contnet(working_directory: str, file_path: str) -> str:
+import config
+
+
+def get_file_content(working_directory: str, file_path: str) -> str:
     try:
         working_dir_abs_path = os.path.abspath(working_directory) #Deduces absolute path starting from root
     except Exception as Error:
@@ -15,6 +18,17 @@ def get_file_contnet(working_directory: str, file_path: str) -> str:
     if_valid_target = os.path.commonpath([working_dir_abs_path, target_dir]) == working_dir_abs_path
     if not if_valid_target:
         raise ValueError(f'Error: Cannot read "{file_path}" as it is outside the permitted working directory')
-    if not os.path.isdir(target_dir):
+    if not os.path.isfile(target_dir):
         raise ValueError(f'Error: File not found or is not a regular file: "{file_path}"')
-    return ""
+
+
+
+    try:
+        with open(target_dir,'r') as f:
+            content = f.read(config.MAX_CHARS)
+            if f.read(1):
+                content += f'[...File "{file_path}" truncated at {config.MAX_CHARS} characters]'
+    except Exception as error:
+        raise ValueError(f"Error: could not read {file_path}") from error
+
+    return content
