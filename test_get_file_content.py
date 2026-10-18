@@ -18,12 +18,12 @@ class system_file_content_function(unittest.TestCase):
         print(result)
 
     def test_err_calc_bin(self):
-        with self.assertRaises(ValueError):
-            _ = get_file_content("calculator", "/bin/cat")
+        result = get_file_content("calculator", "/bin/cat")
+        self.assertEqual(result,"""Error: Cannot read "/bin/cat" as it is outside the permitted working directory""")
 
     def test_err_pkg_notExist(self):
-        with self.assertRaises(ValueError):
-            _ = get_file_content("calculator", "pkg/does_not_exist.py")
+        result = get_file_content("calculator", "pkg/does_not_exist.py")
+        self.assertEqual(result,"""Error: File not found or is not a regular file: pkg/does_not_exist.py""")
 
 
 if __name__ == "__main__":

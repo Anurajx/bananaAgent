@@ -10,13 +10,15 @@ class system_get_function_test(unittest.TestCase):
         # print(f"DIAGNOSIS {accessible}")
         self.assertEqual(accessible,"""
 result for .:
+ - lorem.txt: File Size=20928bytes, is_dir=False
  - main.py: File Size=754bytes, is_dir=False
  - pkg: File Size=512bytes, is_dir=True
  - tests.py: File Size=1458bytes, is_dir=False""")
 
     def test_bin_files(self):
-        with self.assertRaises(ValueError):
-            _ = get_files_info("calculator", "/bin")
+        result = get_files_info("calculator", "/bin")
+        # print(result)
+        self.assertEqual(result,"Error: the target path /bin is out of allowed dir scope for agent")
 
     def test_pkg_files(self):
         accessible = get_files_info("calculator", "pkg")
@@ -28,12 +30,14 @@ result for pkg:
 
 
     def test_stopstop_files(self):
-        with self.assertRaises(ValueError):
-            _ = get_files_info("calculator", "../")
+        result = get_files_info("calculator", "../")
+        # print(result)
+        self.assertEqual(result,"Error: the target path /mnt/c/Users/anura/Desktop/bananaAgent is out of allowed dir scope for agent")
 
     def test_main_files(self):
-        with self.assertRaises(ValueError):
-            _ = get_files_info("calculator", "main.py")
+        result = get_files_info("calculator", "main.py")
+        # print(result)
+        self.assertEqual(result,"Error: the target dir /mnt/c/Users/anura/Desktop/bananaAgent/calculator/main.py does not exist")
 
 
 
