@@ -26,7 +26,7 @@ def get_file_content(working_directory: str, file_path: str) -> str:
             if f.read(1):
                 content += f'[...File "{file_path}" truncated at {config.MAX_CHARS} characters]'
 
-    except Exception as error:
-        raise ValueError(f"Error: could not read {file_path}") from error
+    except OSError as error:
+        return (f"Error: could not read {file_path} Logs: {error}")
 
     return content

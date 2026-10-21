@@ -11,7 +11,6 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
          if not target_dir:
              return (f"Error: failed to resolve target directory {directory}")
 
-
          if_valid_target = os.path.commonpath([working_dir_abs_path, target_dir]) == working_dir_abs_path
          if not if_valid_target:
              return (f"Error: the target path {target_dir} is out of allowed dir scope for agent")
@@ -24,7 +23,7 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
 
          content = os.listdir(target_dir)
      except OSError as error:
-         raise ValueError(f"Error: could not list content of {directory}") from error
+         return (f"Error: could not list content of {directory} Logs: {error}")
 
      # print(f"CONTENT IS {content}")
 
@@ -41,7 +40,7 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
          # print(f"SIZE IS: {size}")
              is_dir = os.path.isdir(full_path)
          except OSError as error:
-             raise ValueError(f"Error: could not find information of {i}") from error
+             return (f"Error: could not find information of {i} Logs:{error}")
 
          # print(f"file {i} is {is_dir}")
          result = f" - {i}: File Size={size}bytes, is_dir={is_dir}"

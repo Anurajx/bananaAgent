@@ -22,9 +22,11 @@ result for .:
 
     def test_pkg_files(self):
         accessible = get_files_info("calculator", "pkg")
+        print(accessible)
         self.assertEqual(accessible,"""
 result for pkg:
  - calculator.py: File Size=2021bytes, is_dir=False
+ - morelorem.txt: File Size=512bytes, is_dir=True
  - render.py: File Size=420bytes, is_dir=False
  - __pycache__: File Size=512bytes, is_dir=True""")
 
