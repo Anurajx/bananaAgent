@@ -1,6 +1,6 @@
 import os
 import subprocess
-from xxlimited import Error
+import sys
 
 
 def run_python_file(working_directory: str, file_path: str, args: list[str] | None = None) -> str:
@@ -24,21 +24,25 @@ def run_python_file(working_directory: str, file_path: str, args: list[str] | No
         if not file_path.endswith('.py'):
             return f'Error: "{file_path}" is not a Python file'
 
-        command = ["python", target_file]
-        command.extend(args or [])
+        command = [sys.executable , target_file]
+        if args:
+            command.extend(args or [])
         try:
             completed = subprocess.run(command, text=True, capture_output=True ,timeout=30,check=False)
             output = ""
             if completed.returncode != 0:
-                output+=f"""Process exited with code {completed.returncode}"""
-            if completed.stderr is None and completed.stdout is None:
-                output+="""No output produced"""
+                output+=f"""Process exited with code {completed.returncode}\n"""
+            if not completed.stderr and not completed.stdout :
+                output+="""No output produced\n"""
             else:
-                output+=f"""STDERR:{completed.stderr} and STDOUT:{completed.stdout}"""
+                output+=f"""STDERR:{completed.stderr} and STDOUT:{completed.stdout} Done"""
 
             return output
-        except :
-            return f"Waassipppp"
+        except subprocess.TimeoutExpired:
+            return "Error: The process timed out after 30 seconds."
+
+        except Exception as e:
+              return f"Error running subprocess: {str(e)}"
 
     except OSError as error:
         return f'Error: something went wrong calling run_python_file function Logs:{error}'
