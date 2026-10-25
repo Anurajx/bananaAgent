@@ -1,8 +1,10 @@
-import os
 import argparse
+import os
+
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from prompts import system_prompt
 
 load_dotenv()
 
@@ -29,6 +31,10 @@ def main():
     args = parser.parse_args()
 
     messageList = [
+        {
+            "role": "system",
+            "content": system_prompt
+        },
         {
             "role": "user",
             "content": args.user_prompt
