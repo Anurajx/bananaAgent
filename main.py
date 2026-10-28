@@ -1,9 +1,12 @@
 import argparse
+import json
 import os
 
 from dotenv import load_dotenv
 from openai import OpenAI
+from rich.console import Console
 
+from functions.get_files_info import schema_get_files_info
 from prompts import system_prompt
 
 load_dotenv()
@@ -41,11 +44,18 @@ def main():
         }
     ]
 
-    response = generate_content(client, messageList)
+    console = Console()
+    with console.status("Thinking machine"):
+        response = generate_content(client, messageList)
 
 
+    message = response.choices[0].message
 
-    if response.usage and args.verbose:
+    if message.tool_calls:
+        for tool_call in message.tool_calls:
+            function_args = json.loads(tool_call.function.arguments or "{}")
+            print(f"Calling function: {tool_call.function.name}({function_args})")
+    elif response.usage and args.verbose:
         print(response.choices[0].message.content)
         print(f"Prompt Token: {response.usage.prompt_tokens}")
         print(f"Response Token: {response.usage.completion_tokens}")
@@ -58,8 +68,14 @@ def main():
 def generate_content(client, messages):
     return client.chat.completions.create(
         model= "openrouter/free",
-        messages= messages
+        messages= messages,
+        tools=available_functions
     )
+
+
+available_functions = [
+    schema_get_files_info,
+]
 
 if __name__ == "__main__":
     main()
