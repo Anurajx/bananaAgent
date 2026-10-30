@@ -31,3 +31,25 @@ def write_file(working_directory: str, file_path: str, content: str) -> str :
 
     except OSError as error:
         return (f'Error: Cannot write to "{file_path}" as something went wrong calling write_file function, Error Log:{error}')
+
+
+schema_write_file = {
+    "type": "function",
+    "function": {
+        "name": "write_file",
+        "description": "Writes provided content in file in a specified file path relative to the working directory, in end returns Success confirmation",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "File path of file to be written to, relative to the working directory",
+                },
+                "content": {
+                    "type": "string",
+                    "description": "Content that is to be written inside the target file, it can be None (default is None)",
+                },
+            },
+        },
+    },
+}

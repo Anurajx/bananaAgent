@@ -46,3 +46,28 @@ def run_python_file(working_directory: str, file_path: str, args: list[str] | No
 
     except OSError as error:
         return f'Error: something went wrong calling run_python_file function Logs:{error}'
+
+
+
+
+
+schema_run_python_file = {
+    "type": "function",
+    "function": {
+        "name": "run_python_file",
+        "description": "Runs python file with provided arguments in a specified directory relative to the working directory, at end returns output of python program",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "File path to execute python program from, relative to the working directory",
+                },
+                "args": {
+                    "type": "list[str] | None",
+                    "description": "List of arguments to give to python file, it can be None (default is None)",
+                },
+            },
+        },
+    },
+}

@@ -6,7 +6,10 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from rich.console import Console
 
+from functions.get_file_content import schema_get_files_content
 from functions.get_files_info import schema_get_files_info
+from functions.run_python_file import schema_run_python_file
+from functions.write_file import schema_write_file
 from prompts import system_prompt
 
 load_dotenv()
@@ -45,7 +48,7 @@ def main():
     ]
 
     console = Console()
-    with console.status("Thinking machine"):
+    with console.status("Thinking machine"): #Animation
         response = generate_content(client, messageList)
 
 
@@ -75,6 +78,9 @@ def generate_content(client, messages):
 
 available_functions = [
     schema_get_files_info,
+    schema_get_files_content,
+    schema_run_python_file,
+    schema_write_file
 ]
 
 if __name__ == "__main__":

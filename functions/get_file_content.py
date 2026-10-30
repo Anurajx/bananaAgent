@@ -30,3 +30,21 @@ def get_file_content(working_directory: str, file_path: str) -> str:
         return (f"Error: could not read {file_path} Logs: {error}")
 
     return content
+
+
+schema_get_files_content = {
+    "type": "function",
+    "function": {
+        "name": "get_files_content",
+        "description": "Extracts and returns file content in a specified file path relative to the working directory, providing data present inside the file",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "file path to read file content from, relative to the working directory",
+                },
+            },
+        },
+    },
+}
