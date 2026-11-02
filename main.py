@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from rich.console import Console
 
-from call_function import available_functions
+from call_function import available_functions, call_function
 from prompts import system_prompt
 
 load_dotenv()
@@ -53,12 +53,17 @@ def main():
 
     if message.tool_calls:
         for tool_call in message.tool_calls:
-            function_args = json.loads(tool_call.function.arguments or "{}")
-            print(f"Calling function: {tool_call.function.name}({function_args})")
+            # function_args = json.loads(tool_call.function.arguments or "{}")
+            print("STARTING EXECUTION")
+            result_message = call_function(tool_call, args.verbose)
+            print(f"-> {result_message['content']}")
+            # print(f"Calling function: {tool_call.function.name}({function_args})")
+
     elif response.usage and args.verbose:
         print(response.choices[0].message.content)
         print(f"Prompt Token: {response.usage.prompt_tokens}")
         print(f"Response Token: {response.usage.completion_tokens}")
+
     elif not args.verbose:
         print(response.choices[0].message.content)
     else:

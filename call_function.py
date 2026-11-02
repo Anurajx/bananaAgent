@@ -24,7 +24,7 @@ def call_function(tool_call, verbose: bool = False) -> dict:
     function_map: dict[str, Callable[..., str]] = { # Instead of using mutiple if statements we use employ a dict
        # Callable makes sure the function name here can be called
         "get_file_content": get_file_content,
-        "get_file_info": get_files_info,
+        "get_files_info": get_files_info,
         "run_python_file": run_python_file,
         "write_file": write_file
     }
