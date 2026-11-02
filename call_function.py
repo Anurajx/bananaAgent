@@ -37,12 +37,6 @@ def call_function(tool_call, verbose: bool = False) -> dict:
             "content": f"Error: Unknown function: {function_name}",
         }
 
-    tool= {
-        "role":"tool",
-        "tool_call_id": "",
-        "content": ""
-    }
-
     function_args["working_directory"]= "./calculator" #Hardcoded calculator dir as working directory
 
     result = function_map[function_name](**function_args)
