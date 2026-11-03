@@ -1,0 +1,8 @@
+Hello! This is a test file created by the AI assistant.
+
+Here's some sample content:
+- Line 1
+- Line 2
+- Line 3
+
+The file was written successfully!
