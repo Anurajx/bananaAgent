@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import sys
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -45,30 +46,54 @@ def main():
     ]
 
     console = Console()
+
+    # messages=[] #Handles message history
+    processComplete = False
+
     with console.status("Thinking machine"): #Animation
-        response = generate_content(client, messageList)
+        for _ in range(20):
+            response = generate_content(client, messageList)
+
+            try:
+                message = response.choices[0].message
+            except:
+                print("API response invalid, check your quota limit")
+                break
+            messageList.append(message)
+
+            if message.tool_calls:
+                for tool_call in message.tool_calls:
+                    # function_args = json.loads(tool_call.function.arguments or "{}")
+                    # print("STARTING EXECUTION")
+                    result_message = call_function(tool_call, args.verbose)
+                    messageList.append(result_message)
+                    # print(f"-> {result_message['content']}")
+                    # print(f"Calling function: {tool_call.function.name}({function_args})")
+                    #
+            elif response.usage and args.verbose:
+                processComplete= True
+                print(response.choices[0].message.content)
+                print(f"Prompt Token: {response.usage.prompt_tokens}")
+                print(f"Response Token: {response.usage.completion_tokens}")
+                break
+
+            elif not args.verbose:
+                processComplete= True
+                print(response.choices[0].message.content)
+                break
+            else:
+                processComplete= True
+                if not response.usage:
+                    raise RuntimeError("response usage not found")
 
 
-    message = response.choices[0].message
+    if not processComplete:
+        print("Agent could not complete given task in given time")
+        sys.exit(1)
 
-    if message.tool_calls:
-        for tool_call in message.tool_calls:
-            # function_args = json.loads(tool_call.function.arguments or "{}")
-            print("STARTING EXECUTION")
-            result_message = call_function(tool_call, args.verbose)
-            print(f"-> {result_message['content']}")
-            # print(f"Calling function: {tool_call.function.name}({function_args})")
 
-    elif response.usage and args.verbose:
-        print(response.choices[0].message.content)
-        print(f"Prompt Token: {response.usage.prompt_tokens}")
-        print(f"Response Token: {response.usage.completion_tokens}")
 
-    elif not args.verbose:
-        print(response.choices[0].message.content)
-    else:
-        if not response.usage:
-            raise RuntimeError("response usage not found")
+
 
 def generate_content(client, messages):
     return client.chat.completions.create(
