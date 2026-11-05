@@ -6,6 +6,7 @@ import sys
 from dotenv import load_dotenv
 from openai import OpenAI
 from rich.console import Console
+from typing_extensions import Text
 
 from call_function import available_functions, call_function
 from prompts import system_prompt
@@ -57,7 +58,7 @@ def main():
             try:
                 message = response.choices[0].message
             except:
-                print("API response invalid, check your quota limit")
+                print("API response invalid, check your quota limit. dont be broke")
                 break
             messageList.append(message)
 
@@ -69,22 +70,14 @@ def main():
                     messageList.append(result_message)
                     # print(f"-> {result_message['content']}")
                     # print(f"Calling function: {tool_call.function.name}({function_args})")
-                    #
-            elif response.usage and args.verbose:
-                processComplete= True
-                print(response.choices[0].message.content)
-                print(f"Prompt Token: {response.usage.prompt_tokens}")
-                print(f"Response Token: {response.usage.completion_tokens}")
-                break
-
-            elif not args.verbose:
-                processComplete= True
-                print(response.choices[0].message.content)
-                break
             else:
-                processComplete= True
-                if not response.usage:
-                    raise RuntimeError("response usage not found")
+                processComplete = True
+                print(response.choices[0].message.content)
+                if args.verbose and response.usage:
+                    print(f"Prompt Token: {response.usage.prompt_tokens}")
+                    print(f"Response Token: {response.usage.completion_tokens}")
+                    break
+                break
 
 
     if not processComplete:
